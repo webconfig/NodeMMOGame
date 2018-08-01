@@ -3,6 +3,7 @@ import {Transform} from "../physics/Transform";
 import {Types} from "./GameObjectTypes";
 
 export namespace GameObjectsContainer {
+    //游戏世界物体集合
     export let gameObjectsMapById: Map<string, GameObject> = new Map<string, GameObject>();
 }
 
@@ -16,6 +17,7 @@ export class GameObjectsFactory {
     static CreateCallbacks: Array<Function> = [];
     static DestroyCallbacks: Array<Function> = [];
 
+    //生成一个物体
     static InstatiateWithTransform(type: string, transform: Transform, id?: string, data?: [DataView, number]): GameObject {
         let gameObject: GameObject;
 
@@ -36,12 +38,14 @@ export class GameObjectsFactory {
         return gameObject;
     }
 
+    //生成一个物体
     static Instatiate(type: string, id?: string, data?: [DataView, number]): GameObject {
         let position: Transform = new Transform(0,0,32,32);
 
         return GameObjectsFactory.InstatiateWithTransform(type, position, id, data);
     }
 
+    //生成一个物体
     static InstatiateManually(gameObject: GameObject) {
         GameObjectsFactory.AddToListeners(gameObject);
 

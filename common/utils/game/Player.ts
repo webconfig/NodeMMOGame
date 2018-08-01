@@ -98,7 +98,7 @@ export class Player extends Actor {
         if(this.lastInputSnapshot) {
             this.lastInputSnapshot.setSnapshotDelta();
         }
-
+        console.log('--commonUpdate--'+delta);
         this.updatePosition(delta);
     }
 

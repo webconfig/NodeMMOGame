@@ -49,6 +49,7 @@ export class GameObject extends Serializable {
         this.forceComplete = true;
     }
 
+    //物体帧更新
     public update(delta: number) {
         if(CommonConfig.IS_SERVER) {
             this.serverUpdate(delta);

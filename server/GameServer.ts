@@ -39,13 +39,6 @@ export class GameServer {
         this.world = new GameWorld();
         this.netObjectsSerializer = new NetObjectsSerializer(this.world.ChunksManager);
 
-        // GameObjectsFactory.DestroyCallbacks.push((gameObject: GameObject) => {
-        //     if(gameObject instanceof Actor) {
-        //         this.sockets.emit(SocketMsgs.CHAT_MESSAGE,
-        //             {s: "Server", m: (gameObject as Actor).Name + " has been slain"});
-        //     }
-        // });
-
         this.initTestObjects();
 
         this.startGameLoop();
@@ -107,7 +100,7 @@ export class GameServer {
             }
 
             socket.on(SocketMsgs.CLIENT_READY, () => {
-                let player: Player = GameObjectsFactory.Instatiate("Player") as Player;
+                let player: Player = GameObjectsFactory.Instatiate("Player") as Player;//创建玩家
                 player.Transform.X = Math.floor(Math.random() * 300) + 50;
                 player.Transform.Y = Math.floor(Math.random() * 300) + 50;
 
@@ -123,7 +116,7 @@ export class GameServer {
                 this.sockets.emit(SocketMsgs.CHAT_MESSAGE, {s: "Server", m: player.Name + " has joined game"});
             });
 
-            socket.on(SocketMsgs.INPUT_SNAPSHOT, (data) => {
+            socket.on(SocketMsgs.INPUT_SNAPSHOT, (data) => {//处理用户输入
                 let player: Player = this.world.getGameObject(serverClient.PlayerId) as Player;
                 if(player == null) {
                     return;
@@ -218,6 +211,7 @@ export class GameServer {
         this.clients.delete(client.Socket);
     }
 
+    //生成阻挡物
     private initTestObjects() {
         let o: GameObject;
 

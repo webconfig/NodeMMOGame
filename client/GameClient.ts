@@ -19,7 +19,6 @@ import {Transform} from "../common/utils/physics/Transform";
 const customParser = require('socket.io-msgpack-parser');
 // import * as io from "socket.io-client"
 const io = require('socket.io-client');
-
 export class GameClient {
     private socket: SocketIOClient.Socket;
     private world: GameWorld;
@@ -39,6 +38,7 @@ export class GameClient {
     private deltaHistory: Array<number> = [];
 
     constructor() {
+        //游戏开始位置
         this.connect();
         this.inputSender = new InputSender(this.socket);
         this.heartBeatSender = new HeartBeatSender(this.socket);
@@ -51,11 +51,6 @@ export class GameClient {
     }
 
     private connect() {
-        // this.socket = io.connect({
-        //     reconnection: false,
-        //     parser: customParser
-        // });
-        // workaround to lack off parser type in socketio types
         this.socket = io({
                 reconnection: false,
                 parser: customParser
@@ -92,10 +87,10 @@ export class GameClient {
             this.cursor = GameObjectsFactory.InstatiateManually(new Cursor(new Transform(1,1,1))) as Cursor;
             this.inputHandler = new InputHandler(this.cursor);
 
-            this.inputHandler.addSnapshotCallback(this.inputSender.sendInput.bind(this.inputSender));
+            this.inputHandler.addSnapshotCallback(this.inputSender.sendInput.bind(this.inputSender));//发送用户输入到服务器
             this.inputHandler.addSnapshotCallback((snapshot: InputSnapshot) => {
                 if(this.localPlayer) {
-                    this.localPlayer.setInput(snapshot);
+                    this.localPlayer.setInput(snapshot);//服务器返回用户输入
                 }
             });
         });

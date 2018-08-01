@@ -14,18 +14,19 @@ export class GameWorld extends GameObjectsSubscriber {
         console.log("create game instance");
     }
 
+    //帧更新
     public update(delta: number) {
         const maxDelta: number = 40;
         const maxDeltaLoops: number = 3;
 
         let loops: number = 0;
         while(delta > 0 && loops < maxDeltaLoops) {
-            let loopDelta: number = maxDelta < delta ? maxDelta : delta;
-            this.GameObjectsMapById.forEach((object: GameObject) => {
+            let loopDelta: number = maxDelta < delta ? maxDelta : delta;//帧时间差
+            this.GameObjectsMapById.forEach((object: GameObject) => {//便利所有物体帧更新
                 object.update(loopDelta);
             });
 
-            this.collistionsSystem.updateCollisions(this.GameObjectsMapById);
+            this.collistionsSystem.updateCollisions(this.GameObjectsMapById);//碰撞更新
             delta -= maxDelta;
             loops++;
         }

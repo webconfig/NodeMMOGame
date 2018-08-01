@@ -2,7 +2,7 @@ import {GameObject} from "../utils/game/GameObject";
 import {CommonConfig} from "../CommonConfig";
 import {Player} from "./game/Player";
 
-
+//活动区域管理
 export class ChunksManager {
     private numOfChunksX: number;
     private numOfChunksY: number;
@@ -139,9 +139,10 @@ export class ChunksManager {
         return this.objectsChunks.get(gameObject);
     }
 
+    //所有物体重新设置区块
     public rebuild(gameObjectsMapById: Map<string, GameObject>) {
         gameObjectsMapById.forEach((object: GameObject) => {
-            let chunk: Chunk = this.getChunkByCoords(object.Transform.X, object.Transform.Y);
+            let chunk: Chunk = this.getChunkByCoords(object.Transform.X, object.Transform.Y);//当前物体在的区块
 
             if(!chunk) {
                 // console.log("Object out of chunks!");;
@@ -153,12 +154,12 @@ export class ChunksManager {
                 return;
             }
 
-            chunk.addObject(object);
+            chunk.addObject(object);//新区块添加这个物体
             this.objectsChunks.set(object, chunk);
             object.forceCompleteUpdate();
 
             if(oldChunk != undefined) {
-                oldChunk.removeObject(object);
+                oldChunk.removeObject(object);//老区块删除这个物体
             }
         });
     }
@@ -189,14 +190,15 @@ export class ChunksManager {
         return this.chunks;
     }
 }
-
+//活动区域
 export class Chunk {
     x: number;
     y: number;
 
     private size: number;
-
+    //该区域内物体的数量
     readonly objects: Array<GameObject>;
+    //附近的区域
     readonly neighbors: Array<Chunk>;
 
     private numOfPlayers: number;
