@@ -38,7 +38,8 @@ export function NetworkProperty(shortKey: string, type: SerializableTypes) {
 
         target[PropNames.PropertyTypes].set(shortKey, type);
 
-        target[PropNames.SerializeFunctions].set(shortKey, (object: Serializable, view: DataView, offset: number) => {
+        target[PropNames.SerializeFunctions].set(shortKey, (object: Serializable, view: DataView, offset: number) => {//序列化
+            console.log('NetworkProperty-->SerializeFunctions-->:'+shortKey);
             let type: SerializableTypes = object[PropNames.PropertyTypes].get(shortKey);
 
             if(type == SerializableTypes.String) {
@@ -65,26 +66,42 @@ export function NetworkProperty(shortKey: string, type: SerializableTypes) {
             return Serializable.TypesToBytesSize.get(type);
         });
 
-        target[PropNames.DeserializeFunctions].set(shortKey, (object: Serializable, view: DataView, offset: number): number => {
+        target[PropNames.DeserializeFunctions].set(shortKey, (object: Serializable, view: DataView, offset: number): number => {//反序列化
             if(type == SerializableTypes.String) {
                 object[key] = decodeString(view, offset);
                 return (object[key] as string).length + 1;
             } else if(type == SerializableTypes.Int8) {
-                object[key] = view.getInt8(offset);
+                let k=view.getInt8(offset);
+                object[key] = k;
+                console.log('key:'+key+'old:'+object[key]+'---'+k+"--"+object[key]);
             } else if(type == SerializableTypes.Int16) {
-                object[key] = view.getInt16(offset);
+                let k=view.getInt16(offset);
+                object[key] = k;
+                console.log('key:'+key+'old:'+object[key]+'---'+k+"--"+object[key]);
             } else if(type == SerializableTypes.Int32) {
-                object[key] = view.getInt32(offset);
+                let k=view.getInt32(offset);
+                object[key] = k;
+                console.log('key:'+key+'old:'+object[key]+'---'+k+"--"+object[key]);
             } else if(type == SerializableTypes.Uint8) {
-                object[key] = view.getUint8(offset);
+                let k=view.getUint8(offset);
+                object[key] = k;
+                console.log('key:'+key+'old:'+object[key]+'---'+k+"--"+object[key]);
             } else if(type == SerializableTypes.Uint16) {
-                object[key] = view.getUint16(offset);
+                let k=view.getUint16(offset);
+                object[key] = k;
+                console.log('key:'+key+'old:'+object[key]+'---'+k+"--"+object[key]);
             } else if(type == SerializableTypes.Uint32) {
-                object[key] = view.getUint32(offset);
+                let k=view.getUint32(offset);
+                object[key] = k;
+                console.log('key:'+key+'old:'+object[key]+'---'+k+"--"+object[key]);
             } else if(type == SerializableTypes.Float32) {
-                object[key] = view.getFloat32(offset);
+                let k=view.getFloat32(offset);
+                object[key] = k;
+                console.log('key:'+key+'old:'+object[key]+'---'+k+"--"+object[key]);
             } else if(type == SerializableTypes.Float64) {
-                object[key] = view.getFloat64(offset);
+                let k=view.getFloat64(offset);
+                object[key] = k;
+                console.log('key:'+key+'old:'+object[key]+'---'+k+"--"+object[key]);
             }
 
             return Serializable.TypesToBytesSize.get(type);

@@ -55,24 +55,25 @@ export class NetObjectsSerializer extends GameObjectsSubscriber {
         return updateBufferView;
     }
 
+    //获取状态变更
     public collectUpdate(complete: boolean = false): Map<Chunk, ArrayBuffer> {
         let chunksUpdate: Map<Chunk, ArrayBuffer> = new Map<Chunk, ArrayBuffer>();
 
         let chunks: Chunk[][] = this.chunksManager.Chunks;
         for(let i = 0; i < chunks.length; i++) {
-            for (let j = 0; j < chunks[i].length; j++) {
+            for (let j = 0; j < chunks[i].length; j++) {//便利所有块
                 let chunk: Chunk = chunks[i][j];
-                //no need to send update from chunk, that doesnt have players
+                //不需要从没有玩家的区域发送更新
                 if (!chunk.HasPlayersInNeighborhood) {
                     continue;
                 }
 
-                //if chunk has new players inside we need to send complete update to them
+                //有新的玩家加入该区域，向他发送改区域所有的物体状态
                 let chunkCompleteUpdate: boolean = complete || chunk.HasNewcomersInNeighborhood;
-                let neededBufferSize: number = 0;
+                let neededBufferSize: number = 0;//需要发送的字节数
                 let objectsToUpdateMap: Map<GameObject, number> = new Map<GameObject, number>();
 
-                chunk.Objects.forEach((gameObject: GameObject) => {
+                chunk.Objects.forEach((gameObject: GameObject) => {//便利区域内所有物体
                     let neededSize = gameObject.calcNeededBufferSize(chunkCompleteUpdate);
                     if (neededSize > 0) {
                         objectsToUpdateMap.set(gameObject, neededBufferSize);
@@ -126,7 +127,7 @@ export class NetObjectsSerializer extends GameObjectsSubscriber {
                 break;
             }
 
-            id += updateBufferView.getUint32(offset + 1).toString();
+            id += updateBufferView.getUint32(offset + 1).toString();//获取玩家id
 
             offset += 5;
 

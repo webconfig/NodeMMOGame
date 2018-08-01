@@ -90,7 +90,7 @@ export class GameClient {
             this.inputHandler.addSnapshotCallback(this.inputSender.sendInput.bind(this.inputSender));//发送用户输入到服务器
             this.inputHandler.addSnapshotCallback((snapshot: InputSnapshot) => {
                 if(this.localPlayer) {
-                    this.localPlayer.setInput(snapshot);//服务器返回用户输入
+                    this.localPlayer.setInput(snapshot);//本地预先处理用户输入
                 }
             });
         });

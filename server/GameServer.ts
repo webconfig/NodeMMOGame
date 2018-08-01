@@ -39,7 +39,7 @@ export class GameServer {
         this.world = new GameWorld();
         this.netObjectsSerializer = new NetObjectsSerializer(this.world.ChunksManager);
 
-        this.initTestObjects();
+        //this.initTestObjects();
 
         this.startGameLoop();
         this.startUpdateLoop();
@@ -146,27 +146,30 @@ export class GameServer {
         });
     }
 
+    //发送变更给客户端
     private sendUpdate(updateBuffer: Map<Chunk, ArrayBuffer>) {
         let chunksManager: ChunksManager = this.world.ChunksManager;
+        //console.log("--开始发送--");
         this.clients.forEach((client: ServerClient) => {
             if (client.IsReady) {
-                let player: Player = this.world.getGameObject(client.PlayerId) as Player;
+                let player: Player = this.world.getGameObject(client.PlayerId) as Player;//获取玩家
+                console.log("发送-->玩家："+player.ID);
                 if(player == null) {
                     return;
                 }
 
-                let chunk: Chunk = chunksManager.getObjectChunk(player);
+                let chunk: Chunk = chunksManager.getObjectChunk(player);//获取玩家所在区域
 
                 if(!chunk) {
                     return;
                 }
 
                 let updateArray: Array<ArrayBuffer> = [];
-                if(updateBuffer.get(chunk).byteLength > 1) {
+                if(updateBuffer.get(chunk).byteLength > 1) {//获取该区域内的变更
                     updateArray.push(updateBuffer.get(chunk));
                 }
 
-                chunk.Neighbors.forEach((chunkNeighbor: Chunk) => {
+                chunk.Neighbors.forEach((chunkNeighbor: Chunk) => {//获取附近区域变更
                     if(updateBuffer.get(chunkNeighbor).byteLength > 1) {
                         updateArray.push(updateBuffer.get(chunkNeighbor));
                     }
@@ -174,7 +177,7 @@ export class GameServer {
 
                 let snapshot: InputSnapshot = player.LastInputSnapshot;
                 if(snapshot && snapshot.isMoving()) {
-                    client.Socket.emit(SocketMsgs.LAST_SNAPSHOT_DATA, [snapshot.ID, snapshot.SnapshotDelta]);
+                    client.Socket.emit(SocketMsgs.LAST_SNAPSHOT_DATA, [snapshot.ID, snapshot.SnapshotDelta]);//玩家最近输入
                 }
                 if(updateArray.length > 0) {
                     client.Socket.emit(SocketMsgs.UPDATE_GAME, updateArray);
@@ -183,6 +186,7 @@ export class GameServer {
         });
     }
 
+    //获取状态变更，发送给客户端
     private collectAndSendUpdate(complete: boolean = false) {
         this.sendUpdate(this.netObjectsSerializer.collectUpdate(complete));
 
@@ -211,7 +215,7 @@ export class GameServer {
         this.clients.delete(client.Socket);
     }
 
-    //生成阻挡物
+    //生成阻挡物和服务器ai
     private initTestObjects() {
         let o: GameObject;
 
@@ -255,8 +259,8 @@ export class GameServer {
         let spawnEnemy: Function = () => {
             enemyCounter++;
             let e: Enemy = GameObjectsFactory.Instatiate("Enemy") as Enemy;
-            e.Transform.X = Math.floor(Math.random() * CommonConfig.numOfChunksX * CommonConfig.chunkSize - 100) + 50;
-            e.Transform.Y = Math.floor(Math.random() * CommonConfig.numOfChunksX * CommonConfig.chunkSize - 100) + 50;
+            e.Transform.X =100; //Math.floor(Math.random() * CommonConfig.numOfChunksX * CommonConfig.chunkSize - 100) + 50;
+            e.Transform.Y =100;// Math.floor(Math.random() * CommonConfig.numOfChunksX * CommonConfig.chunkSize - 100) + 50;
 
             e.Name = "Michau " + enemyCounter.toString();
 
@@ -265,7 +269,7 @@ export class GameServer {
             })
         };
 
-        for (let i = 0; i < 300; i++) {
+        for (let i = 0; i < 1; i++) {
             spawnEnemy();
         }
 

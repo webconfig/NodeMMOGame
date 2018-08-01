@@ -202,6 +202,7 @@ export class Chunk {
     readonly neighbors: Array<Chunk>;
 
     private numOfPlayers: number;
+    //是否有新物体来到
     private hasNewcomers: boolean = false;
 
     constructor(x: number, y: number, size: number) {

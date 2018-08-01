@@ -23,9 +23,11 @@ export abstract class Actor extends GameObject {
     @NetworkProperty(ChangesDict.ANIMATION_TYPE, SerializableTypes.String)
     protected animationType: string;
 
+    //朝向
     @NetworkProperty(ChangesDict.FACE_DIR, SerializableTypes.Uint8)
     protected faceDirection: number = 5;
 
+    //移动方向
     protected moveDirection: number = 0;
 
     protected weapon: Weapon = null;
@@ -45,6 +47,7 @@ export abstract class Actor extends GameObject {
         this.animationType = "idle";
     }
 
+    //位置变更
     protected updatePosition(delta: number) {
         let moveFactors: [number, number] = this.parseMoveDir();
         if (moveFactors[0] != 0) {
@@ -125,7 +128,7 @@ export abstract class Actor extends GameObject {
         this.name = name;
         this.addChange(ChangesDict.NAME);
     }
-
+    //设置移动方向
     set MoveDirection(direction: number) {
         if(direction >= 0 && direction <= 8) {
             if(this.moveDirection == 0 && direction != 0) {

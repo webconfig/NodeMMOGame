@@ -9,6 +9,7 @@ import {PortalGun} from "./PortalGun";
 import {MagicWand} from "./MagicWand";
 
 export class Player extends Actor {
+    //历史输入
     private inputHistory: Array<InputSnapshot>;
     private lastInputSnapshot: InputSnapshot;
     private lastServerSnapshotData: [number, number];
@@ -29,7 +30,7 @@ export class Player extends Actor {
         // this.weapon = new PortalGun();
         this.weapon = new MagicWand();
     }
-
+    //客户端保存当然操作
     private pushSnapshotToHistory(inputSnapshot: InputSnapshot) {
         this.lastInputSnapshot = inputSnapshot;
         //only client need snapshots history
@@ -40,6 +41,7 @@ export class Player extends Actor {
         }
     }
 
+    //处理输入
     public setInput(inputSnapshot: InputSnapshot) {
         let inputCommands: Map<INPUT_COMMAND, string> = inputSnapshot.Commands;
 
@@ -48,7 +50,7 @@ export class Player extends Actor {
 
             if(key == INPUT_COMMAND.MOVE_DIRECTION) {
                 this.moveDirectionAction(value);
-                this.pushSnapshotToHistory(inputSnapshot);
+                this.pushSnapshotToHistory(inputSnapshot);//客户端保存当然操作
             } else if(key == INPUT_COMMAND.FIRE) {
                 this.fireAction(value, 0);
             } else if(key == INPUT_COMMAND.FIRE_2) {
@@ -98,7 +100,7 @@ export class Player extends Actor {
         if(this.lastInputSnapshot) {
             this.lastInputSnapshot.setSnapshotDelta();
         }
-        console.log('--commonUpdate--'+delta);
+        //console.log('--commonUpdate--'+delta);
         this.updatePosition(delta);
     }
 

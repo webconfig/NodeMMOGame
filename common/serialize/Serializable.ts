@@ -49,6 +49,7 @@ export abstract class Serializable {
         return this.deserializedFields;
     }
 
+    //获取状态变化需要的字节数
     public calcNeededBufferSize(complete: boolean): number {
         if (this.forceComplete) {
             complete = true;
@@ -178,7 +179,7 @@ export abstract class Serializable {
             if(type == SerializableTypes.Object) {
                 objectsToDecode.push(index);
             } else {
-                offset += this[PropNames.DeserializeFunctions].get(shortKey)(this, updateBufferView, offset);
+                offset += this[PropNames.DeserializeFunctions].get(shortKey)(this, updateBufferView, offset);//反序列化
                 this.deserializedFields.add(shortKey);
             }
 
